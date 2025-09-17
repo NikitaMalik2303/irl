@@ -79,7 +79,13 @@ class ReplayBuffer(object):
         indices = np.random.permutation(self.obs.shape[0])[-batch_size:]
 
 
-        return self.obs[indices], self.acs[indices], self.rews[indices], self.next_obs[indices], self.terminals[indices]
+        return (
+            self.obs[indices], 
+            self.acs[indices], 
+            self.rews[indices], 
+            self.next_obs[indices], 
+            self.terminals[indices]
+            )
 
 
     def sample_recent_data(self, batch_size=1):

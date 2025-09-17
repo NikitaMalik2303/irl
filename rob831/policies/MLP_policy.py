@@ -82,7 +82,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
         # TODO return the action that the policy prescribes
         output = self.forward(ptu.from_numpy(observation))
-        if self.forward: 
+        if self.discrete: 
             return ptu.to_numpy(output.sample())
         else: 
             return ptu.to_numpy(output.mean)

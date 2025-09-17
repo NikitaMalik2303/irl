@@ -4,8 +4,6 @@ import time
 from rob831.infrastructure.rl_trainer import RL_Trainer
 from rob831.agents.bc_agent import BCAgent
 from rob831.policies.loaded_gaussian_policy import LoadedGaussianPolicy
-import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 class BC_Trainer(object):
