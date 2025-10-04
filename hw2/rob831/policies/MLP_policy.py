@@ -147,13 +147,13 @@ class MLPPolicyPG(MLPPolicy):
         # HINT4: use self.optimizer to optimize the loss. Remember to
             # 'zero_grad' first
 
-        action_distribution = self.forward(observations)
+        action_distribution = self(observations)
         log_action = action_distribution.log_prob(actions)
-        loss = -torch.sum(log_action*advantages)
+        policy_loss = -(log_action*advantages).mean()
 
         self.optimizer.zero_grad()
-        loss.backward()
-        self.optmizer.step()
+        policy_loss.backward()
+        self.optimizer.step()
 
 
         if self.nn_baseline:
@@ -166,15 +166,15 @@ class MLPPolicyPG(MLPPolicy):
             ## HINT2: You will need to convert the targets into a tensor using
                 ## ptu.from_numpy before using it in the loss
 
-            q_values= normalize(target, np.mean(q_values), np.std(q_values))
-            q_values = ptu.from_numpy(q_values)
+            q_values_norm = normalize(q_values, np.mean(q_values), np.std(q_values))
+            q_values_norm = ptu.from_numpy(q_values_norm)
 
-            target = self.baseline(observations).squeeze()
-            b_loss = self.baseline_loss(target, q_values)
+            pred = self.baseline(observations).squeeze()
+            b_loss = self.baseline_loss(pred, q_values_norm)
 
-            self.baseline.optimizer.zero_grad()
+            self.baseline_optimizer.zero_grad()
             b_loss.backward()
-            self.baseline.optimizer.step()
+            self.baseline_optimizer.step()
 
         train_log = {
             'Training Loss': ptu.to_numpy(policy_loss),
