@@ -148,7 +148,7 @@ class MPCPolicy(BasePolicy):
         batch_obs= np.asarray([obs]*self.N)
         for t in range(self.horizon):
             action= candidate_action_sequences[:, t, :]
-            rewards, _ = self.env.get_reward(batch_obs, action)[0]
+            rewards, _ = self.env.get_reward(batch_obs, action)
             sum_of_rewards+= rewards
             batch_obs= model.get_prediction(batch_obs, action, self.data_statistics)
     
